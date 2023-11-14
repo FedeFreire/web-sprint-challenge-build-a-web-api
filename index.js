@@ -12,3 +12,24 @@ I need this code, but don't know where, perhaps should make some middleware, don
 
 Pull your server into this file and start it!
 */
+
+const express = require("express");
+const server = express();
+
+const projectsRouter = require("./api/projects/projects-router.js");
+
+
+
+server.use("/api/projects", projectsRouter);
+// server.use("/api/register", usersRoutes);
+
+server.use("/", (req, res) => {
+  res.status(200).send("API running");
+});
+
+
+const port = process.env.PORT || 9000;
+
+server.listen(port, () => {
+  console.log(`\n*** Server Running on http://localhost/api:${port} ***\n`);
+});
