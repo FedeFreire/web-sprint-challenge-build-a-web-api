@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 const express = require("express");
-const { checkProjectId, checkNewProject } = require("./projects-middleware.js");
+const { checkProjectId, checkNewProject , editProject} = require("./projects-middleware.js");
 const Projects = require("./projects-model.js");
 
 
@@ -19,7 +19,7 @@ projectsRouter.get("/:id", checkProjectId, (req, res, next) => {
 });
 
 projectsRouter.post("/", checkNewProject, (req, res, next) => {
-  Projects.add(req.body)
+  Projects.insert(req.body)
     .then((project) => {
       res.status(201).json(project);
     })
@@ -28,22 +28,22 @@ projectsRouter.post("/", checkNewProject, (req, res, next) => {
 
 projectsRouter.delete("/:id", checkProjectId, (req, res, next) => {
   Projects.remove(req.params.id)
-    .then(() => {
-      res.status(200).json({ message: "The project has been nuked" });
+  .then(deletedProject => {
+    res.status(200).json(deletedProject);
     })
     .catch(next);
 });
 
-projectsRouter.put("/:id", [checkProjectId, checkNewProject], (req, res, next) => {
-  Projects.update(req.params.id, req.body)
-    .then(() => {
-      res.status(200).json({ message: "The project has been updated" });
-    })
-    .catch(next);
-});
+projectsRouter.put("/:id", [checkProjectId, editProject], (req, res, next) => {
+    Projects.update(req.params.id, req.body)
+      .then(updatedProject => {
+        res.status(200).json(updatedProject);
+      })
+      .catch(next);
+  });
 
-projectsRouter.get("/:id/messages", checkProjectId, (req, res, next) => {
-  Projects.findProjectMessages(req.params.id)
+projectsRouter.get("/:id/actions", checkProjectId, (req, res, next) => {
+  Projects.getProjectActions(req.params.id)
     .then((messages) => {
       res.status(200).json(messages);
     })

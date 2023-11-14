@@ -15,16 +15,28 @@ async function checkProjectId(req, res, next) {
   }
   
 
-function checkNewProject(req, res, next) {
-  const { name } = req.body;
-  if (name !== undefined && typeof name === "string" && name.length && name.trim()) {
-    next();
-  } else {
-   next({ status: 422, message: "please provide a name for the hub" });
+  function checkNewProject(req, res, next) {
+    const { name, description } = req.body;
+      if (name && typeof name === "string" && name.trim() &&
+        description && typeof description === "string" && description.trim()) {
+      next();
+    } else {
+      next({ status: 400, message: "Please provide both a name and a description for the project." });
+    }
   }
-}
+  
+  function editProject(req, res, next) {
+    const { name, description , completed } = req.body;
+      if (name && typeof name === "string" && name.trim() &&
+        description && typeof description === "string" && description.trim() && completed !== undefined) {
+      next();
+    } else {
+      next({ status: 400, message: "Please provide both a name and a description for the project." });
+    }
+  }
 
 module.exports = {
     checkProjectId,
     checkNewProject,
+    editProject,
 };

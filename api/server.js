@@ -17,7 +17,7 @@ server.use(customMorgan);
 
 
 server.use('/api/projects', projectRouter);
-server.use('/api/actions', actionsRouter);
+// server.use('/api/actions', actionsRouter);
 
 server.get('/', (req, res) => {
   res.send(`
